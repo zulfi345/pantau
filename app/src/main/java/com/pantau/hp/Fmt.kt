@@ -18,6 +18,8 @@ object Fmt {
         if (b >= 1073741824L) String.format(id, "%.1f GB", b / 1073741824.0)
         else String.format(id, "%.0f MB", b / 1048576.0)
 
+    fun gb(b: Long, dec: Int): String = String.format(id, "%." + dec + "f GB", b / 1073741824.0)
+
     fun bytes(b: Long): String = when {
         b < 1024 -> "$b B"
         b < 1048576 -> String.format(id, "%.0f KB", b / 1024.0)

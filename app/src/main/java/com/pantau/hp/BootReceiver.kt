@@ -10,9 +10,7 @@ class BootReceiver : BroadcastReceiver() {
         if (i.action != Intent.ACTION_BOOT_COMPLETED) return
         try { c.startForegroundService(Intent(c, MonitorService::class.java)) } catch (e: Exception) { }
         try {
-            val blocked = c.getSharedPreferences("cfg", Context.MODE_PRIVATE)
-                .getStringSet("blocked", emptySet()) ?: emptySet()
-            if (blocked.isNotEmpty() && VpnService.prepare(c) == null) {
+            if (Fw.active(c) && VpnService.prepare(c) == null) {
                 c.startService(Intent(c, PantauVpn::class.java))
             }
         } catch (e: Exception) { }

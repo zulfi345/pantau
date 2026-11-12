@@ -6,16 +6,15 @@ import android.os.ParcelFileDescriptor
 import java.io.FileInputStream
 
 // Firewall lokal: hanya aplikasi yang diblokir yang dialirkan ke terowongan,
-// dan paketnya dibuang. Tidak ada server, tidak ada data yang keluar dari HP.
+// lalu paketnya dibuang. Tanpa server, tidak ada data yang keluar dari HP.
 class PantauVpn : VpnService() {
     private var tun: ParcelFileDescriptor? = null
     private var reader: Thread? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         closeTun()
-        val blocked = getSharedPreferences("cfg", MODE_PRIVATE)
-            .getStringSet("blocked", emptySet()) ?: emptySet()
-        if (blocked.isEmpty()) {
+        val blocked = Fw.blocked(this)
+        if (!Fw.enabled(this) || blocked.isEmpty()) {
             stopSelf()
             return START_NOT_STICKY
         }
@@ -60,6 +59,7 @@ class PantauVpn : VpnService() {
     }
 
     override fun onRevoke() {
+        Fw.setEnabled(this, false)
         closeTun()
         stopSelf()
     }

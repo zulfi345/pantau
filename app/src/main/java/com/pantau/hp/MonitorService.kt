@@ -114,7 +114,13 @@ class MonitorService : Service() {
 
         tickCount++
         if (tickCount % 10 == 0) checkHeat()
-        if (tickCount % 60 == 0) SpeedWidget.updateAll(this)
+        if (tickCount % 60 == 1) {
+            val ctx = applicationContext
+            Thread {
+                UsageRepo.refreshToday(ctx)
+                h.post { SpeedWidget.updateAll(ctx) }
+            }.start()
+        }
     }
 
     private var lastHeat = 0L

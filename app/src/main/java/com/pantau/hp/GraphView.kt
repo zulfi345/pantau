@@ -8,6 +8,6 @@ class GraphView(ctx: Context) : View(ctx) {
     var idx = 0
 
     override fun onDraw(c: Canvas) {
-        GraphRenderer.draw(c, width.toFloat(), height.toFloat(), idx, resources.displayMetrics.density)
+        GraphRenderer.draw(c, width.toFloat(), height.toFloat(), idx, resources.displayMetrics.density, false)
     }
 }
